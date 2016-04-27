@@ -1,0 +1,12 @@
+
+<%= render 'form'%>
+
+  <%= link_to 'Like' ,like_post_path(@post) %>
+  &nbsp; &nbsp;<%= @post.likes.where(like_status: true).count %>&nbsp; &nbsp;
+  
+  <%= link_to 'Unlike' ,dislike_post_path(@post) %>
+   &nbsp; &nbsp;<%= @post.likes.where(like_status: false).count %> 
+   <br><br>
+
+
+<%= link_to 'Back' , post_path(@post) %>

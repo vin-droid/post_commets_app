@@ -1,0 +1,59 @@
+
+<%@post = Post.find(params[:post_id]) %>
+<% user = User.find(@post.user_id)%>
+
+
+<!-- details about post -->
+Posted by <%= user.f_name + user.l_name %> 
+<br>
+
+		<div>
+			 <h3><%= @post.title %></h3>
+			   <%= @post.body %> 
+			     <br>
+			 
+			    <%=link_to  'Like' ,like_post_path(@post) %> 
+			    &nbsp; &nbsp;<%= @post.likes.count %>
+
+			   <%= link_to 'Unlike' ,dislike_post_path(@post) %>
+			     &nbsp; &nbsp;<%= @post.likes.where(like_status: false).count %> 
+			   <br><br>
+
+			 <b>Comment &nbsp; &nbsp;   <%= @post.comments.count %></b> 
+		 </div>
+
+	<br>
+	<br>
+Comments :
+
+
+
+
+<!-- All Comments on This post -->
+<% @comments.order(:created_at ).each do |comnt|%>
+				<%@user = User.find(comnt.user_id) %>
+
+				<div>
+					<h5><%= @user.f_name%>
+					<%= @user.l_name%></h5>
+
+					<%= comnt.desc %>
+					<br>
+					<%=link_to  'Like' ,like_post_comment_path(@post ,comnt) %>
+					  &nbsp; &nbsp;<%= comnt.likes.where(like_status: true).count %>
+
+					<%=link_to  'UnLike',dislike_post_comment_path(@post ,comnt) %>
+					  &nbsp; &nbsp;<%= comnt.likes.where(like_status:false).count %>
+
+
+ <!-- if this is current user's comment ,user can modify comment -->
+					<%if (current_user.id == comnt.user_id)%>
+							<%= link_to 'Edit' , edit_post_comment_path(@post ,comnt) %>
+							<%= link_to  'Delete Post' , post_comment_path(@post,comnt)  ,method: :delete,:notice=> 'Successfully deleted'%>
+					<%else%>
+					<%end%>
+				</div>
+			<%end%>
+
+
+

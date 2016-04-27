@@ -1,0 +1,113 @@
+
+<!-- Authentication if User Logged in -->
+<% if current_user %>
+  <h1> Welcome   <%= current_user.f_name %> &nbsp; <%= current_user.l_name %></h1>
+  <%= link_to 'Profile' , user_path(current_user)%> | <%= link_to "Logout", logout_path %> |
+			       <!--  <%= link_to 'friends'%> |  -->
+
+
+
+
+
+  <!-- find if user has friend request -->
+  <%if current_user.has_friend_request?%>
+		friendship requests 
+		<% friendships_requests = current_user.has_friend_request %>
+		<%= friendships_requests.size %>
+		<br>
+		<% friendships_requests.each do |friendship| %>
+				  <% user = User.find(friendship.friendable_id) %>
+			      <%= user.f_name + user.l_name %>
+			      <%= link_to 'Accept', accept_friend_request_path(user.id, current_user.id) %> &nbsp;&nbsp;&nbsp;
+		      	  <%= link_to 'Decline' ,reject_friend_request_path(user.id, current_user.id) %>
+ 		<% end %>
+  <% end %>
+
+
+
+
+ <!-- user's pending request -->
+
+   <%unless current_user.pending_invited.empty?%>
+     sent friend requests :
+        <%sent_requets = current_user.pending_invited%>
+      
+          <%sent_requets.each do |sent_requet|%>
+		            <%user = User.find(sent_requet.friend_id)%>
+		            <%= user.f_name + user.l_name %>
+		            &nbsp;&nbsp;&nbsp;
+		           <%= link_to 'Cancel' ,reject_friend_request_path(current_user.id, user.id) %>
+ 		 <% end %>
+  <% end %>
+</br>
+</br>
+</br>
+
+
+
+
+
+
+
+	You can send friend request to these users : </br>
+	<!-- new users to send friend request  -->
+
+  <% friendshipable_friends = current_user.has_frienshipable_friends %>
+    <% friendshipable_friends.each do |friendshipable_friend| %>
+	       <%= link_to "#{friendshipable_friend.f_name} #{friendshipable_friend.l_name}  " ,user_path(friendshipable_friend)%>
+	           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	       <%= link_to 'Add Friend' ,send_friend_request_path(current_user.id,friendshipable_friend)%> 
+	       <br>
+    <%end%>
+  <br>
+
+
+
+
+   <!-- Create  new post if user logged in -->
+			     
+			 <%= link_to 'New Post' , new_post_path%>
+			 <% else %>
+			       <li><%= link_to 'Login', login_path,class:"active" %> </li>
+			       <li> 
+			       <%= link_to 'Signup', signup_path%></li>
+			<% end %>
+
+
+
+<!-- All User's post Are here  -->
+
+	 		<h1>All Post</h1> 
+			<% @posts.order(created_at: :desc ).each do |post| %>
+			        <h3><%= post.title %></h3>
+			            <%= truncate(post.body , :length => 325)  %> <br>
+			            <%= link_to 'Show' , post_path(post) %>
+
+
+
+
+<!-- if user logged in , can comment on Any user's post -->
+
+			    <% if current_user %>  
+			         <%= link_to 'Comment' , new_post_comment_path(post) %>
+			         &nbsp; &nbsp;<%= post.comments.count %>
+
+			         <%= link_to 'Like' ,like_post_path(post) %>
+			         &nbsp; &nbsp;<%= post.likes.where(like_status: true).count %>&nbsp; &nbsp;
+
+			         <%= link_to 'Unlike' ,dislike_post_path(post) %>
+			         &nbsp; &nbsp;<%= post.likes.where(like_status: false).count %>
+
+
+
+<!-- if user posts a post  , can edit and delete that post -->
+			         <% if (current_user.id == post.user_id) %>
+			             <%= link_to 'Edit' , edit_post_path(post) %>
+			             <%= link_to  'Delete Post' , post_path(post)  ,:method=> :delete ,
+			             :action=> :destroy,:notice=> 'Successfully deleted'%>
+			         <% end %>
+			    <% end %>
+		   <% end %>
+
+		
+

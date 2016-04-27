@@ -1,0 +1,43 @@
+    
+
+    <h2><%= @user.f_name + @user.l_name %></h2>
+    <!-- check Is logged_user connected with user -->
+   <%if current_user.connected_with?(@user) %>
+        <%else%>
+        <%if !(current_user.id == @user.id)%>
+        <!-- if user not connected with current user then you can send friend request -->
+        <%= link_to 'Add Friend' ,send_friend_request_path(current_user.id,@user)%>
+        <%end%>
+   <%end%>
+   
+
+    <h1> Friends :</h1>
+
+
+ <!-- check user has friendships? -->
+<ul >
+<%@friendships = @user.has_friendships %>
+
+<!-- if user doesn't have friendship -->
+   <% if @friendships.empty?  %>
+   <!-- nothing to do -->
+
+
+     <%else%>
+     <!-- user has friendships -->
+        <!-- print friends -->
+   <%@friendships.each do |friendship|%>
+    <li> 
+           <!-- friends who accept user's request -->
+         <% if friendship.friend_id == @user.id%>
+              <% @friend = User.find(friendship.friendable_id)%>
+              <%= link_to "#{@friend.f_name} #{@friend.l_name}" ,user_path(@friend)%>
+              <%else%> 
+              <!-- friends who send friend request to user -->
+              <%@friend = User.find(friendship.friend_id)%>
+              <%= link_to "#{@friend.f_name} #{@friend.l_name}" ,user_path(@friend)%>
+              <%end%>
+      </li>
+                <%end%>
+          <%end%>
+                 </ul>
