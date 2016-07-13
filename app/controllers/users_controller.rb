@@ -33,7 +33,7 @@ class UsersController < ApplicationController
 private
 
   def user_params
-    params.require(:user).permit(:f_name,:l_name,:user_name,:dob ,:sex,:dob,:age,:email_id, :password, :password_confirmation)
+    params.require(:user).permit(:f_name,:l_name,:user_name,:dob ,:sex,:dob,:age,:email_id, :password, :password_confirmation,:image)
   end
   def self_action
     @user = User.find(params[:id])

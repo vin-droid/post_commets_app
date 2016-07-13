@@ -7,7 +7,9 @@
         <%= link_to 'Edit' , edit_user_path(@user) %> | 
         <%= link_to 'Delete Your Account' , user_path(@user) ,method: :delete %>
     <%end%>
-  <pre>First Name: <%= @user.f_name %>
+  <pre>
+  Image: <%= image_tag @user.image.url  if @user.image?%>
+  First Name: <%= @user.f_name %>
   Last Name: <%= @user.l_name %>
   Email: <%= @user.email_id %>
   Age: <%= @user.age %>
