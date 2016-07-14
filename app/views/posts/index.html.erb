@@ -90,13 +90,13 @@
 
 			    <% if current_user %>  
 			         <%= link_to 'Comment' , new_post_comment_path(post) %>
-			         &nbsp; &nbsp;<%= post.comments.count %>
+			         &nbsp; &nbsp;<%= post.comments.size %>
 
 			         <%= link_to 'Like' ,like_post_path(post) %>
-			         &nbsp; &nbsp;<%= post.likes.where(like_status: true).count %>&nbsp; &nbsp;
+			         &nbsp; &nbsp;<%= post.likes_count %>&nbsp; &nbsp;
 
 			         <%= link_to 'Unlike' ,dislike_post_path(post) %>
-			         &nbsp; &nbsp;<%= post.likes.where(like_status: false).count %>
+			         &nbsp; &nbsp;<%= post.unlikes_count %>
 
 
 

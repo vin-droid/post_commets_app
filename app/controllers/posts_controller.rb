@@ -15,7 +15,7 @@
 
 
        def index
-       	@posts = Post.all
+       	@posts = Post.all.includes(:likes,comments: [:likes])
        end
 
 

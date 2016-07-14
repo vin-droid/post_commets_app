@@ -4,14 +4,22 @@ has_secure_password
 has_many :posts , :dependent => :destroy
 has_many :likes , :dependent => :destroy
 has_many :comments , :dependent => :destroy
-has_many :friendships , :dependent => :destroy
-has_many :users, through: :friendships , :dependent => :destroy
+has_many :friendships , -> { Friendship.accepted } , :dependent => :destroy
+has_many :friends, through: :friendships , :dependent => :destroy
+# has_many :sent_request , class_name: "Friendship" ,
+# has_many :friend_request ,class_name:"Friendship"
+
+
+
+
+
 mount_uploader :image, ImageUploader
 #====================== validation ===========================#
 
 validates :email_id, confirmation: true , presence: true ,uniqueness: true
 
 validates :password_digest , presence: true  
+validates :image , presence: true
 
 
 
@@ -71,7 +79,7 @@ end
 
 # is user has friend request
 def has_friend_request?
-    Friendship.where(friend_id: self.id , pending: true).count > 0
+    has_friend_request.count > 0
 end
 
 # return total friend requests

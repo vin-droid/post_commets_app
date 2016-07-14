@@ -3,6 +3,8 @@ class UsersController < ApplicationController
 
   def new
     @user = User.new
+        p "================new action=========#{params.inspect}==========================="
+
   end
 
   def show
@@ -17,6 +19,8 @@ class UsersController < ApplicationController
     redirect_to '/'
   end
   def create
+        p "=================create action========#{params.inspect}==========================="
+
     @user = User.create(user_params)
     if @user.save!
       session[:user_id] = @user.id
@@ -33,6 +37,7 @@ class UsersController < ApplicationController
 private
 
   def user_params
+    p "=========================#{params.inspect}==========================="
     params.require(:user).permit(:f_name,:l_name,:user_name,:dob ,:sex,:dob,:age,:email_id, :password, :password_confirmation,:image)
   end
   def self_action
