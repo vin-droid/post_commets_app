@@ -4,8 +4,11 @@ has_secure_password
 has_many :posts , :dependent => :destroy
 has_many :likes , :dependent => :destroy
 has_many :comments , :dependent => :destroy
-has_many :friendships , -> { Friendship.accepted } , :dependent => :destroy
-has_many :friends, through: :friendships , :dependent => :destroy
+has_many :friendships  , :dependent => :destroy
+#has_many :friends, through: :friendships , :conditions=> [':friend_id => self.id OR :user_id => self.id']
+
+has_many :friends , -> {Friendship.in_any(self.id, :user_id, :friend_id)}
+#, :dependent => :destroy
 # has_many :sent_request , class_name: "Friendship" ,
 # has_many :friend_request ,class_name:"Friendship"
 
